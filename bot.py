@@ -882,7 +882,7 @@ async def cabinet(cb: CallbackQuery):
 async def menu_sub(cb: CallbackQuery):
     if not await _check_reg(cb):
         return
-    await cb.message.edit_text(""💳 <b>Абонемент</b>\n\nВыберите группу:", reply_markup=kb_sub_groups())
+    await cb.message.edit_text("💳 <b>Абонемент</b>\n\nВыберите группу:", reply_markup=kb_sub_groups())
     await cb.answer()
 
 
