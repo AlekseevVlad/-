@@ -488,14 +488,14 @@ def kb_main() -> InlineKeyboardMarkup:
 
 def kb_back_main() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="🪷 Главное меню", callback_data="back_main")]
+        [InlineKeyboardButton(text=" Главное меню", callback_data="back_main")]
     ])
 
 
 def kb_after_booking() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="🕊 Личный кабинет", callback_data="cabinet")],
-        [InlineKeyboardButton(text="🪷 Главное меню", callback_data="back_main")],
+        [InlineKeyboardButton(text=" Главное меню", callback_data="back_main")],
     ])
 
 
@@ -545,7 +545,7 @@ def kb_single_dates(dates: list) -> InlineKeyboardMarkup:
         slot = SLOTS[d["slot_key"]]
         ts = int(d["date"].timestamp())
         wd = WEEKDAY_RU[d["date"].weekday()]
-        lbl = f"📅 {wd} {d['date'].strftime('%d.%m')} — {slot['label']}"
+        lbl = f" {wd} {d['date'].strftime('%d.%m')} — {slot['label']}"
         buttons.append([InlineKeyboardButton(
             text=lbl,
             callback_data=f"single_date:{d['slot_key']}:{ts}"
@@ -586,7 +586,7 @@ def kb_admin() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="📊 Статистика", callback_data="adm:stats")],
         [InlineKeyboardButton(text="📋 Список на сегодня", callback_data="adm:today")],
-        [InlineKeyboardButton(text="👥 Все студенты", callback_data="adm:students")],
+        [InlineKeyboardButton(text="🫂 Все студенты", callback_data="adm:students")],
         [InlineKeyboardButton(text="➕ Добавить текущего студента", callback_data="adm:add_current_student")],
         [InlineKeyboardButton(text="🗑 Удалить пользователя", callback_data="adm:delete_user")],
         [InlineKeyboardButton(text="⏳ Заявки", callback_data="adm:requests")],
@@ -599,7 +599,7 @@ def kb_admin_group_pick() -> InlineKeyboardMarkup:
         [InlineKeyboardButton(text="🌞 Утренняя", callback_data="adm_group:morning")],
         [InlineKeyboardButton(text="🌙 Вечерняя", callback_data="adm_group:evening")],
         [InlineKeyboardButton(text="💫 Смешанная", callback_data="adm_group:mixed")],
-        [InlineKeyboardButton(text="✖️ Отмена", callback_data="adm:back")],
+        [InlineKeyboardButton(text=" Отмена", callback_data="adm:back")],
     ])
 
 
@@ -619,7 +619,7 @@ def kb_admin_subtype_pick(group: str) -> InlineKeyboardMarkup:
             [InlineKeyboardButton(text="mixed_8", callback_data="adm_subtype:mixed_8")],
             [InlineKeyboardButton(text="mixed_12", callback_data="adm_subtype:mixed_12")],
         ]
-    rows.append([InlineKeyboardButton(text="◀️ Отмена", callback_data="adm:back")])
+    rows.append([InlineKeyboardButton(text=" Отмена", callback_data="adm:back")])
     return InlineKeyboardMarkup(inline_keyboard=rows)
 
 
@@ -663,7 +663,7 @@ def kb_calendar_week(
     if nav:
         buttons.append(nav)
 
-    buttons.append([InlineKeyboardButton(text="✔️ Готово", callback_data="cal_done")])
+    buttons.append([InlineKeyboardButton(text=" Готово", callback_data="cal_done")])
     buttons.append([InlineKeyboardButton(text="◀️ Назад", callback_data="menu_sub")])
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
@@ -727,9 +727,9 @@ async def cmd_start(msg: Message, state: FSMContext):
 
     if student and student["first_name"]:
         await msg.answer(
-            f"🧿 С возвращением, <b>{student['first_name']}</b>!\n\n"
+            f" С возвращением, <b>{student['first_name']}</b>!\n\n"
             "🌿 Здравствуйте! Я рада что вы выбираете себя и выбираете практиковать йогу!\n\n"
-            "Выбери вариант занятий:",
+            "Выберите вариант занятий:",
             reply_markup=kb_main(),
         )
     else:
@@ -768,7 +768,7 @@ async def reg_phone_contact(msg: Message, state: FSMContext):
 async def reg_phone_text(msg: Message, state: FSMContext):
     phone = msg.text.strip().replace(" ", "").replace("-", "")
     if len(phone) < 8:
-        await msg.answer("👀 Введите корректный номер:")
+        await msg.answer(" Введите корректный номер:")
         return
     await _finish_reg(msg, state, phone)
 
@@ -779,7 +779,7 @@ async def _finish_reg(msg: Message, state: FSMContext, phone: str):
     await db_create_student(msg.from_user.id, msg.from_user.username or "", name, phone)
     await state.clear()
     await msg.answer(
-        f"✔️ <b>Регистрация завершена!</b>\n\n"
+        f" <b>Регистрация завершена!</b>\n\n"
         f"🧘🏻‍♀️ Имя: {name}\n📱 Телефон: {phone}\n\n"
         "Теперь выберите вариант занятий:",
         reply_markup=ReplyKeyboardRemove(),
@@ -803,8 +803,8 @@ async def back_main(cb: CallbackQuery, state: FSMContext):
 @router.callback_query(F.data == "menu_location")
 async def menu_location(cb: CallbackQuery):
     await cb.message.edit_text(
-        f"📍 <b>Где студия</b>\n\n 💌 {STUDIO_ADDR}\n\n"
-        f"<a href='{STUDIO_MAP}'>🌀 Открыть на Google Maps</a>",
+        f"📍 <b>Где студия</b>\n\n  {STUDIO_ADDR}\n\n"
+        f"<a href='{STUDIO_MAP}'> Открыть на Google Maps</a>",
         reply_markup=kb_back_main(),
     )
     await cb.answer()
@@ -838,7 +838,7 @@ async def cabinet(cb: CallbackQuery):
 
     status_map = {
         "active": "✔️ Активен",
-        "pending": "💌 Ожидает подтверждения",
+        "pending": " Ожидает подтверждения",
         "expired": "✖️ Истёк",
         "none": "—",
     }
@@ -859,7 +859,7 @@ async def cabinet(cb: CallbackQuery):
     )
 
     if enrs:
-        text += "🌀 <b>Предстоящие занятия:</b>\n\n"
+        text += " <b>Предстоящие занятия:</b>\n\n"
         for e in enrs:
             slot = SLOTS.get(e["slot_key"], {})
             wd = WEEKDAY_RU[e["class_date"].weekday()]
@@ -905,7 +905,7 @@ async def sub_evening(cb: CallbackQuery):
         "🌙 <b>Вечерняя группа</b>\n\n"
         "2 раза в неделю — Ср / Пт с <b>19:00 до 20:15</b>\n\n"
         "8 занятий (4 недели) — Ср и Пт бронируются автоматически.\n\n"
-        "💳 Стоимость: <b>1.600.000 VND</b>",
+        " Стоимость: <b>1.600.000 VND</b>",
         reply_markup=kb_evening_classes(),
     )
     await cb.answer()
@@ -916,8 +916,8 @@ async def sub_mixed(cb: CallbackQuery):
     await cb.message.edit_text(
         "💫 <b>Смешанные занятия</b>\n\n"
         "Любые дни из доступных:\n"
-        "🌞 Утро: Вт / Чт / Сб — 09:00\n"
-        "🌙 Вечер: Ср / Пт — 19:00\n\n"
+        " Утро: Вт / Чт / Сб — 09:00\n"
+        " Вечер: Ср / Пт — 19:00\n\n"
         "Выберите количество занятий:",
         reply_markup=kb_mixed_classes(),
     )
@@ -1028,7 +1028,7 @@ async def cal_done(cb: CallbackQuery, state: FSMContext):
             and _same_week(datetime.fromtimestamp(int(s.split("|")[1])).date(), monday)
         )
         if cnt < per_week:
-            await cb.answer(f"🛎 Неделя {w['num']}: выбрано {cnt} из {per_week}!", show_alert=True)
+            await cb.answer(f" Неделя {w['num']}: выбрано {cnt} из {per_week}!", show_alert=True)
             return
 
     group = data["group"]
@@ -1043,7 +1043,7 @@ async def cal_done(cb: CallbackQuery, state: FSMContext):
     lines = _format_book_lines(parsed)
 
     await cb.message.edit_text(
-        f"📋 <b>Подтвердите выбор</b>\n\n"
+        f" <b>Подтвердите выбор</b>\n\n"
         f"{g_label} — <b>{classes} занятий</b> ({price} VND)\n\n"
         f"<b>Выбранные занятия:</b>\n" + "\n".join(lines) +
         "\n\n<i>После подтверждения заявка уйдёт администратору. "
@@ -1119,7 +1119,7 @@ async def sub_send_request(cb: CallbackQuery, state: FSMContext):
                 f"📱 {s.get('phone') or '—'}\n\n"
                 f"{g_label} — <b>{classes} занятий</b> ({price} VND)\n\n"
                 f"<b>Занятия:</b>\n" + "\n".join(lines) +
-                f"\n\n🟤 Заявка #{req_id}",
+                f"\n\n Заявка #{req_id}",
                 reply_markup=kb_admin_request(req_id, cb.from_user.id),
             )
         except Exception as e:
@@ -1184,10 +1184,10 @@ async def admin_approve(cb: CallbackQuery):
             tid,
             f"🪬 <b>Абонемент активирован!</b>\n\n"
             f"{g_label} — <b>{req['classes']} занятий</b>\n"
-            f"✔️ Забронировано занятий: <b>{booked}</b>\n\n"
+            f" Забронировано занятий: <b>{booked}</b>\n\n"
             f"Жду вас в студии:\n  {STUDIO_ADDR}\n"
             f"<a href='{STUDIO_MAP}'> 📌 Google Maps</a>\n\n"
-            "До встречи на ковре! 🌀",
+            "До встречи на ковре! ",
             reply_markup=kb_after_booking(),
         )
     except Exception as e:
@@ -1291,7 +1291,7 @@ async def single_date(cb: CallbackQuery, state: FSMContext):
     await cb.message.edit_text(
         f"✔️ <b>Подтвердите выбор</b>\n\n"
         f"{emoji} <b>{slot['label']}</b>\n"
-        f"🌿 {wd}, {class_dt.strftime('%d.%m.%Y')}\n\n"
+        f" {wd}, {class_dt.strftime('%d.%m.%Y')}\n\n"
         f"🫂 Занято мест: <b>{enrolled}</b> из {MAX_STUDENTS}\n"
         f"🧘🏻‍♀️ Свободно: <b>{free}</b>\n\n"
         "<i>Стоимость разового занятия уточняйте у администратора.</i>",
@@ -1342,7 +1342,7 @@ async def single_confirm(cb: CallbackQuery, state: FSMContext):
                 f"🫂 {s['first_name']} (@{s.get('username') or '—'})\n"
                 f"📱 {s.get('phone') or '—'}\n\n"
                 f"{'🌞' if slot['time_type']=='morning' else '🌙'} {slot['label']}\n"
-                f"🪷 {wd}, {class_dt.strftime('%d.%m.%Y')}"
+                f" {wd}, {class_dt.strftime('%d.%m.%Y')}"
             )
         except Exception:
             for admin_id in ADMIN_IDS:
@@ -1358,10 +1358,10 @@ async def single_confirm(cb: CallbackQuery, state: FSMContext):
         await cb.message.edit_text(
             f"✔️ <b>Место забронировано!</b>\n\n"
             f"{'🌞' if slot['time_type']=='morning' else '🌙'} <b>{slot['label']}</b>\n"
-            f"🟤 {wd}, {class_dt.strftime('%d.%m.%Y')}\n\n"
-            f"Жду тебя в студии:\n 🪷 {STUDIO_ADDR}\n"
+            f" {wd}, {class_dt.strftime('%d.%m.%Y')}\n\n"
+            f"Жду тебя в студии:\n  {STUDIO_ADDR}\n"
             f"<a href='{STUDIO_MAP}'>📌 Google Maps</a>\n\n"
-            " До встречи на ковре! 🌀",
+            " До встречи на ковре! ",
             reply_markup=kb_after_booking(),
             disable_web_page_preview=False,
         )
@@ -1802,7 +1802,7 @@ async def handle_text(msg: Message):
                 sent += 1
             except Exception:
                 fail += 1
-        await msg.answer(f"🧘🏻‍♀️ Готово! ✔️ {sent} / ✖️ {fail}")
+        await msg.answer(f"🧘 Готово! ✔️ {sent} / ✖️ {fail}")
 
 # ══════════════════════════════════════════════════════════════════════════════
 #  ПЛАНИРОВЩИК
@@ -1901,7 +1901,7 @@ async def _job_sub_expiry(bot: Bot):
             await bot.send_message(
                 int(s["telegram_id"]),
                 f"🛎 <b>Абонемент заканчивается через {SUB_WARN_DAYS} дней!</b>\n"
-                f"🟤 До: {s['sub_expires'].strftime('%d.%m.%Y')}\n"
+                f" До: {s['sub_expires'].strftime('%d.%m.%Y')}\n"
                 f"🕊 Осталось: {s['classes_left']} занятий\n\n"
                 "Оформите новый абонемент!",
                 reply_markup=InlineKeyboardMarkup(inline_keyboard=[[
